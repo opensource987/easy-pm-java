@@ -48,6 +48,7 @@ mall
 | 甘特图        |  无  |                   有                   |
 | 自动邮件提醒     |  无  |                   有                   |
 
+
 ## AdminUI前端项目地址
 
 - 前端项目地址： [https://gitee.com/opensourcespace/easy-pm-admin-ui](https://gitee.com/opensourcespace/easy-pm-admin-ui)
