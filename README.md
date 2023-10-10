@@ -10,7 +10,7 @@
 
 ``` lua
 mall
-├── doc 系统部署文档
+├── doc --系统部署文档
 ├── easy-pm-admin -- 管理端核心功能Controller模块
 ├── easy-pm-admin -- 移动端核心功能Controller模块（未启动）
 ├── easy-pm-common -- 工具类及通用代码模块
@@ -50,7 +50,7 @@ mall
 
 ## AdminUI前端项目地址
 
-- 前端项目地址： [https://www.baidu.com/admin/index.html](https://www.baidu.com/admin/index.html)
+- 前端项目地址： [https://gitee.com/opensourcespace/easy-pm-admin-ui](https://gitee.com/opensourcespace/easy-pm-admin-ui)
 
 ## 技术选型
 
@@ -138,8 +138,8 @@ mall
 ###系统管理员账号
 - ry/321aD!min
 
-###感谢
+### 感谢
 感谢若依团队提供的开源若依框架
 
-###Star
+### Star
 如果您觉得本项目还可以，请帮忙点个star~
