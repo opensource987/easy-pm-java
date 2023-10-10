@@ -1,0 +1,2 @@
+Application Version: ${mdframework.version}
+Spring Boot Version: ${spring-boot.version}

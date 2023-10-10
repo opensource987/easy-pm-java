@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mdframework.module.system.mapper.SysDictTypeMapper">
+
+	<resultMap type="SysDictType" id="SysDictTypeResult">
+		<id     property="dictId"     column="dict_id"     />
+		<result property="dictName"   column="dict_name"   />
+		<result property="dictType"   column="dict_type"   />
+		<result property="status"     column="status"      />
+		<result property="createBy"   column="create_by"   />
+		<result property="createTime" column="create_time" />
+		<result property="updateBy"   column="update_by"   />
+		<result property="updateTime" column="update_time" />
+	</resultMap>
+	<sql id="Base_Column_List">
+			o.dict_id,
+			o.dict_name,
+			o.dict_type,
+			o.STATUS,
+			o.create_by,
+			o.create_time,
+			o.remark
+		FROM
+			sys_dict_type o
+	</sql>
+
+	<sql id="selectDictTypeVo">
+        select dict_id, dict_name, dict_type, status, create_by, create_time, remark 
+		from sys_dict_type
+    </sql>
+
+	<select id="listVo" resultType="com.mdframework.module.system.domain.vo.SysDictTypeVo">
+		select
+		<include refid="Base_Column_List"/>
+		${ew.customSqlSegment}
+		order by dict_id desc
+	</select>
+	
+	<select id="selectDictTypeAll" resultMap="SysDictTypeResult">
+		<include refid="selectDictTypeVo"/>
+	</select>
+	
+	<select id="selectDictTypeById" parameterType="Long" resultMap="SysDictTypeResult">
+		<include refid="selectDictTypeVo"/>
+		where dict_id = #{dictId}
+	</select>
+	
+	<select id="selectDictTypeByType" parameterType="String" resultMap="SysDictTypeResult">
+		<include refid="selectDictTypeVo"/>
+		where dict_type = #{dictType}
+	</select>
+	
+	<select id="checkDictTypeUnique" parameterType="String" resultMap="SysDictTypeResult">
+		<include refid="selectDictTypeVo"/>
+		where dict_type = #{dictType} limit 1
+	</select>
+	
+	<delete id="deleteDictTypeById" parameterType="Long">
+ 		delete from sys_dict_type where dict_id = #{dictId}
+ 	</delete>
+ 	
+ 	<delete id="deleteDictTypeByIds" parameterType="Long">
+ 		delete from sys_dict_type where dict_id in
+ 		<foreach collection="array" item="dictId" open="(" separator="," close=")">
+ 			#{dictId}
+        </foreach> 
+ 	</delete>
+
+<!-- 	<update id="updateDictType" parameterType="SysDictType">
+ 		update sys_dict_type
+ 		<set>
+ 			<if test="dictName != null and dictName != ''">dict_name = #{dictName},</if>
+ 			<if test="dictType != null and dictType != ''">dict_type = #{dictType},</if>
+ 			<if test="status != null">status = #{status},</if>
+ 			<if test="remark != null">remark = #{remark},</if>
+ 			<if test="updateBy != null and updateBy != ''">update_by = #{updateBy},</if>
+ 			update_time = sysdate()
+ 		</set>
+ 		where dict_id = #{dictId}
+	</update>-->
+ 	
+<!-- 	<insert id="insertDictType" parameterType="SysDictType">
+ 		insert into sys_dict_type(
+ 			<if test="dictName != null and dictName != ''">dict_name,</if>
+ 			<if test="dictType != null and dictType != ''">dict_type,</if>
+ 			<if test="status != null">status,</if>
+ 			<if test="remark != null and remark != ''">remark,</if>
+ 			<if test="createBy != null and createBy != ''">create_by,</if>
+ 			create_time
+ 		)values(
+ 			<if test="dictName != null and dictName != ''">#{dictName},</if>
+ 			<if test="dictType != null and dictType != ''">#{dictType},</if>
+ 			<if test="status != null">#{status},</if>
+ 			<if test="remark != null and remark != ''">#{remark},</if>
+ 			<if test="createBy != null and createBy != ''">#{createBy},</if>
+ 			sysdate()
+ 		)
+	</insert>-->
+	
+</mapper> 

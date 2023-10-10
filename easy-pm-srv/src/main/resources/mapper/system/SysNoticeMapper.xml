@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mdframework.module.system.mapper.SysNoticeMapper">
+    
+    <resultMap type="SysNotice" id="SysNoticeResult">
+        <result property="noticeId"       column="notice_id"       />
+        <result property="noticeTitle"    column="notice_title"    />
+        <result property="noticeType"     column="notice_type"     />
+        <result property="noticeContent"  column="notice_content"  />
+        <result property="status"         column="status"          />
+        <result property="createBy"       column="create_by"       />
+        <result property="createTime"     column="create_time"     />
+        <result property="updateBy"       column="update_by"       />
+        <result property="updateTime"     column="update_time"     />
+        <result property="remark"         column="remark"          />
+    </resultMap>
+    <sql id="Base_Column_List">
+        notice_id,
+        notice_title,
+        notice_type,
+        cast( notice_content AS CHAR ) AS notice_content,
+        STATUS,
+        create_by,
+        create_time,
+        update_by,
+        update_time,
+        remark
+    FROM
+        sys_notice
+    </sql>
+    <sql id="selectNoticeVo">
+        select notice_id, notice_title, notice_type, cast(notice_content as char) as notice_content, status, create_by, create_time, update_by, update_time, remark
+		from sys_notice
+    </sql>
+    <insert id="insertNotice">
+        insert into sys_notice (
+            <if test="noticeTitle != null and noticeTitle != '' ">notice_title, </if>
+            <if test="noticeType != null and noticeType != '' ">notice_type, </if>
+            <if test="noticeContent != null and noticeContent != '' ">notice_content, </if>
+            <if test="status != null and status != '' ">status, </if>
+            <if test="remark != null and remark != ''">remark,</if>
+             <if test="createBy != null and createBy != ''">create_by,</if>
+             create_time
+         )values(
+            <if test="noticeTitle != null and noticeTitle != ''">#{noticeTitle}, </if>
+            <if test="noticeType != null and noticeType != ''">#{noticeType}, </if>
+            <if test="noticeContent != null and noticeContent != ''">#{noticeContent}, </if>
+            <if test="status != null and status != ''">#{status}, </if>
+            <if test="remark != null and remauploadrk != ''">#{remark},</if>
+             <if test="createBy != null and createBy != ''">#{createBy},</if>
+             sysdate()
+        )
+    </insert>
+
+    <select id="selectNoticeById" parameterType="Long" resultMap="SysNoticeResult">
+        <include refid="selectNoticeVo"/>
+        where notice_id = #{noticeId}
+    </select>
+
+    <select id="listVo" resultType="com.mdframework.module.system.domain.vo.SysNoticeVo">
+        select
+        <include refid="Base_Column_List"/>
+        ${ew.customSqlSegment}
+    </select>
+	
+    <delete id="deleteNoticeById" parameterType="Long">
+        delete from sys_notice where notice_id = #{noticeId}
+    </delete>
+    
+    <delete id="deleteNoticeByIds" parameterType="Long">
+        delete from sys_notice where notice_id in 
+        <foreach item="noticeId" collection="array" open="(" separator="," close=")">
+            #{noticeId}
+        </foreach>
+    </delete>
+    
+</mapper>

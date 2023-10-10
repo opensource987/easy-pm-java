@@ -1,0 +1,45 @@
+package ${packageName}.${moduleName}.domain.req;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+import lombok.experimental.Accessors;
+import java.io.Serializable;
+import java.util.Date;
+import java.math.BigDecimal;
+import javax.validation.constraints.*;
+import org.springframework.validation.annotation.Validated;
+
+/**
+
+ * ==================================================================
+
+ * 这不是一个自由软件！未经本公司授权您只能在不用于商业目的的前提下
+ * 对本程序代码进行修改和使用；不允许对本程序代码以任何目的的再发布。
+ * ==================================================================
+ *
+ * @ClassName ${ClassName}Update
+ * @Author ${author}
+ * @Date ${datetime}
+ * @Version 1.0.0
+ * @Description ${functionName}更新请求体对象
+ */
+@Data
+@ToString
+@Validated
+@EqualsAndHashCode
+@NoArgsConstructor
+@Accessors(chain = true)
+public class ${ClassName}Update extends ${ClassName}Add {
+
+#foreach ($column in $columns)
+#if($column.isPk == '1')
+    @NotNull(message = "${column.columnComment}不能为空")
+    @ApiModelProperty(value = "${column.columnComment}",required = true)
+    private $column.javaType $column.javaField;
+#end
+#end
+}

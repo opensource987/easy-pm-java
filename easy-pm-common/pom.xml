@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8"?>
+			<project xmlns="http://maven.apache.org/POM/4.0.0"
+			         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+			         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+			    <parent>
+			        <artifactId>easy-pm</artifactId>
+			        <groupId>com.mdframework</groupId>
+			        <version>1.0.0</version>
+			    </parent>
+			    <modelVersion>4.0.0</modelVersion>
+			
+			    <artifactId>easy-pm-common</artifactId>
+			
+			    <description>
+			        common通用工具
+			    </description>
+			
+			    <dependencies>
+			        <!-- Spring框架基本的核心工具 -->
+			        <dependency>
+			            <groupId>org.springframework</groupId>
+			            <artifactId>spring-context-support</artifactId>
+			        </dependency>
+			
+			        <!-- SpringWeb模块 -->
+			        <dependency>
+			            <groupId>org.springframework</groupId>
+			            <artifactId>spring-web</artifactId>
+			        </dependency>
+
+					<!-- spring security 安全认证 -->
+					<dependency>
+						<groupId>org.springframework.boot</groupId>
+						<artifactId>spring-boot-starter-security</artifactId>
+					</dependency>
+
+					<!-- 缓存框架 -->
+					<dependency>
+						<groupId>org.springframework.boot</groupId>
+						<artifactId>spring-boot-starter-cache</artifactId>
+					</dependency>
+			
+			        <!-- pagehelper 分页插件 -->
+			        <dependency>
+			            <groupId>com.github.pagehelper</groupId>
+			            <artifactId>pagehelper-spring-boot-starter</artifactId>
+			        </dependency>
+
+
+			
+			        <!-- 自定义验证注解 -->
+			        <dependency>
+			            <groupId>javax.validation</groupId>
+			            <artifactId>validation-api</artifactId>
+			        </dependency>
+			
+			        <!--常用工具类 -->
+			        <dependency>
+			            <groupId>org.apache.commons</groupId>
+			            <artifactId>commons-lang3</artifactId>
+			        </dependency>
+			  
+			        <!-- JSON工具类 -->
+			        <dependency>
+			            <groupId>com.fasterxml.jackson.core</groupId>
+			            <artifactId>jackson-databind</artifactId>
+			        </dependency>
+			
+			        <!-- 阿里JSON解析器 -->
+			        <dependency>
+			            <groupId>com.alibaba</groupId>
+			            <artifactId>fastjson</artifactId>
+						<version>1.2.83</version>
+			        </dependency>
+			
+			        <!-- io常用工具类 -->
+			        <dependency>
+			            <groupId>commons-io</groupId>
+			            <artifactId>commons-io</artifactId>
+			        </dependency>
+			
+			        <!-- 文件上传工具类 -->
+			        <dependency>
+			            <groupId>commons-fileupload</groupId>
+			            <artifactId>commons-fileupload</artifactId>
+			        </dependency>
+			
+			        <!-- excel工具 -->
+			        <dependency>
+			            <groupId>org.apache.poi</groupId>
+			            <artifactId>poi-ooxml</artifactId>
+			        </dependency>
+			
+			        <!-- yml解析器 -->
+			        <dependency>
+			            <groupId>org.yaml</groupId>
+			            <artifactId>snakeyaml</artifactId>
+			        </dependency>
+			
+			        <!--Token生成与解析-->
+			        <dependency>
+			            <groupId>io.jsonwebtoken</groupId>
+			            <artifactId>jjwt</artifactId>
+			        </dependency>
+			
+			        <!-- redis 缓存操作 -->
+			        <dependency>
+			            <groupId>org.springframework.boot</groupId>
+			            <artifactId>spring-boot-starter-data-redis</artifactId>
+			        </dependency>
+			
+			        <!-- pool 对象池 -->
+			        <dependency>
+			            <groupId>org.apache.commons</groupId>
+			            <artifactId>commons-pool2</artifactId>
+			        </dependency>
+			
+			        <!-- 解析客户端操作系统、浏览器等 -->
+			        <dependency>
+			            <groupId>eu.bitwalker</groupId>
+			            <artifactId>UserAgentUtils</artifactId>
+			        </dependency>
+			
+			        <!-- servlet包 -->
+			        <dependency>
+			            <groupId>javax.servlet</groupId>
+			            <artifactId>javax.servlet-api</artifactId>
+			        </dependency>
+			
+			        <dependency>
+			            <groupId>com.baomidou</groupId>
+			            <artifactId>mybatis-plus-boot-starter</artifactId>
+			        </dependency>
+			        <dependency>
+			            <groupId>com.baomidou</groupId>
+			            <artifactId>mybatis-plus-extension</artifactId>
+			        </dependency>
+
+					<!-- https://mvnrepository.com/artifact/io.springfox/springfox-swagger2 -->
+					<!--swagger -->
+					<dependency>
+						<groupId>io.springfox</groupId>
+						<artifactId>springfox-swagger2</artifactId>
+						<exclusions>
+							<exclusion>
+								<groupId>io.swagger</groupId>
+								<artifactId>swagger-annotations</artifactId>
+							</exclusion>
+							<exclusion>
+								<groupId>io.swagger</groupId>
+								<artifactId>swagger-models</artifactId>
+							</exclusion>
+						</exclusions>
+						<version>2.9.2</version>
+					</dependency>
+					<dependency>
+						<groupId>io.swagger</groupId>
+						<artifactId>swagger-annotations</artifactId>
+						<version>1.6.2</version>
+					</dependency>
+					<dependency>
+						<groupId>io.swagger</groupId>
+						<artifactId>swagger-models</artifactId>
+						<version>1.6.2</version>
+					</dependency>
+
+					<dependency>
+						<groupId>com.github.xiaoymin</groupId>
+						<artifactId>knife4j-spring-boot-starter</artifactId>
+						<version>2.0.7</version>
+						<exclusions>
+							<exclusion>
+								<groupId>io.springfox</groupId>
+								<artifactId>*</artifactId>
+							</exclusion>
+							<exclusion>
+								<groupId>io.swagger</groupId>
+								<artifactId>*</artifactId>
+							</exclusion>
+						</exclusions>
+					</dependency>
+
+
+			        <dependency>
+			            <groupId>cn.hutool</groupId>
+			            <artifactId>hutool-all</artifactId>
+			        </dependency>
+			        <dependency>
+			            <groupId>org.projectlombok</groupId>
+			            <artifactId>lombok</artifactId>
+			        </dependency>
+					<dependency>
+						<groupId>com.google.guava</groupId>
+						<artifactId>guava</artifactId>
+						<version>26.0-jre</version>
+					</dependency>
+					<dependency>
+						<groupId>org.bouncycastle</groupId>
+						<artifactId>bcprov-ext-jdk16</artifactId>
+						<version>1.46</version>
+						<type>jar</type>
+						<scope>compile</scope>
+					</dependency>
+
+					<dependency>
+						<groupId>com.github.binarywang</groupId>
+						<artifactId>weixin-java-cp</artifactId>
+						<version>4.1.0</version>
+					</dependency>
+			
+			    </dependencies>
+			
+			</project>
+			
+		
+	

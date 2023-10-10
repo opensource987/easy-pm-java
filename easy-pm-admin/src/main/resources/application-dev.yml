@@ -1,0 +1,187 @@
+# 项目相关配置
+mdframework:
+  # 名称
+  name: mdframework
+  # 版本
+  version: 1.0.0
+  # 版权年份
+  copyrightYear: 2020
+  # 实例演示开关
+  demoEnabled: true
+  # 文件路径,使用jvm系统变量,兼容windows和linux;
+  profile: ${user.dir}/mdframework/uploadPath
+  #图片前缀访问路径
+  prePath: http://localhost:8080${server.servlet.context-path}
+  # 获取ip地址开关
+  addressEnabled: false
+  # 验证码类型 math 数组计算 char 字符验证
+  captchaType: math
+# 数据源配置
+spring:
+    datasource:
+        type: com.alibaba.druid.pool.DruidDataSource
+        driverClassName: com.mysql.cj.jdbc.Driver
+        druid:
+            # 主库数据源
+            master:
+                url: jdbc:mysql://127.0.0.1:3306/easy-pm-basic?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8&autoReconnect=true
+                username: root
+                password: 123456
+            # 从库数据源
+            slave:
+                # 从数据源开关/默认关闭
+                enabled: false
+                url:
+                username:
+                password:
+            # 初始连接数
+            initialSize: 5
+            # 最小连接池数量
+            minIdle: 10
+            # 最大连接池数量
+            maxActive: 20
+            # 配置获取连接等待超时的时间
+            maxWait: 60000
+            # 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
+            timeBetweenEvictionRunsMillis: 60000
+            # 配置一个连接在池中最小生存的时间，单位是毫秒
+            minEvictableIdleTimeMillis: 300000
+            # 配置一个连接在池中最大生存的时间，单位是毫秒
+            maxEvictableIdleTimeMillis: 900000
+            # 配置检测连接是否有效
+            validationQuery: SELECT 1 FROM DUAL
+            testWhileIdle: true
+            testOnBorrow: false
+            testOnReturn: false
+            webStatFilter:
+                enabled: true
+            statViewServlet:
+                enabled: true
+                # 设置白名单，不填则允许所有访问
+                allow:
+                url-pattern: /druid/*
+                # 控制台管理用户名和密码
+                login-username:
+                login-password:
+            filter:
+                stat:
+                    enabled: true
+                    # 慢SQL记录
+                    log-slow-sql: true
+                    slow-sql-millis: 1000
+                    merge-sql: true
+                wall:
+                    config:
+                        multi-statement-allow: true
+    # redis 配置
+    redis:
+        # 地址
+        host: 127.0.0.1
+        # 端口，默认为6379
+        port: 6379
+        # 密码
+        password:
+        # 连接超时时间
+        timeout: 10s
+        lettuce:
+            pool:
+                # 连接池中的最小空闲连接
+                min-idle: 0
+                # 连接池中的最大空闲连接
+                max-idle: 8
+                # 连接池的最大数据库连接数
+                max-active: 8
+                # #连接池最大阻塞等待时间（使用负值表示没有限制）
+                max-wait: -1ms
+#    rabbitmq:
+#      host: 127.0.0.1
+#      port: 5672
+#      virtual-host: test
+#      username: root
+#      password: root
+
+#邮箱配置
+#平台地址，这里用的是qq邮箱，使用其他邮箱请更换
+    mail:
+      # 邮件服务器地址
+      host: smtp.qq.com
+#      port: 465
+      #发送邮件的邮箱地址：改成自己的邮箱
+      username: 382070315@qq.com
+      #发送短信后它给你的授权码 填写到这里
+      password: okrxztqrtsjxbgij
+      #与发件邮箱一致
+      from: 382070315@qq.com
+      # 协议 默认就是smtp
+      protocol: smtp
+      # 编码格式 默认就是utf-8
+      default-encoding: utf-8
+      # smtp的指定端口 使用465要将protocol改为smtps
+      port: 587
+      # 设置开启ssl
+      properties:
+        mail:
+          stmp:
+            ssl:
+              enable: true
+
+
+# Swagger配置
+swagger:
+  # 是否开启swagger
+  enabled: true
+  # 请求前缀
+  pathMapping: ${server.servlet.context-path}
+
+#dataway config
+# 是否启用 Dataway 功能（必选：默认false）
+#HASOR_DATAQL_DATAWAY: true
+## 是否开启 Dataway 后台管理界面（必选：默认false）
+#HASOR_DATAQL_DATAWAY_ADMIN: true
+## dataway  API工作路径（可选，默认：/api/）
+#HASOR_DATAQL_DATAWAY_API_URL: /admin/api/
+## dataway-ui 的工作路径（可选，默认：/interface-ui/）
+#HASOR_DATAQL_DATAWAY_UI_URL: /admin/interface-ui/
+## SQL执行器方言设置（可选，建议设置）
+#HASOR_DATAQL_FX_PAGE_DIALECT: mysql
+
+#api配置web页面入口
+magic-api:
+  web: /magic/web
+  prefix: /magic-api  # 接口前缀
+  resource:
+    type: database  # 配置接口存储方式，这里选择存在数据库中
+    table-name: magic_api_file  # 数据库中的表名
+    readonly: false # 是否是只读模式
+  swagger-config:
+     # 资源名称
+    name: MagicAPI
+    # 资源描述
+    description: MagicAPI v1.0 接口文档
+    # 资源位置
+    location: /v2/api-docs/magic-api/swagger2.json
+    # 文档版本
+    version: 1.0
+    # 文档标题
+    title: MagicAPI v1.0 接口文档
+  response: |- #配置JSON格式，格式为magic-script中的表达式
+    {
+      code: code,
+      msg: message,
+      data,
+      timestamp,
+      requestTime,
+      executeTime,
+    }
+  response-code-config:
+    success: 200 #执行成功的code值
+    invalid: 400 #参数验证未通过的code值
+    exception: -1 #执行出现异常的code值
+  security-config:  # 安全配置
+    username: admin # 登录用的用户名
+    password: admin123 # 登录用的密码
+#    location: classpath:magic-api
+# 其它配置请参考 https://ssssssss.org/config/
+
+
+

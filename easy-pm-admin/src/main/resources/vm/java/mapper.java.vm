@@ -1,0 +1,28 @@
+package ${packageName}.${moduleName}.mapper;
+
+import ${packageName}.${moduleName}.domain.${ClassName};
+import ${packageName}.${moduleName}.domain.vo.${ClassName}Vo;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Param;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import java.util.List;
+/**
+
+ * ==================================================================
+
+ * 这不是一个自由软件！未经本公司授权您只能在不用于商业目的的前提下
+ * 对本程序代码进行修改和使用；不允许对本程序代码以任何目的的再发布。
+ * ==================================================================
+ *
+ * @ClassName ${ClassName}
+ * @Author ${author}
+ * @Date ${datetime}
+ * @Version 1.0.0
+ * @Description ${functionName}Mapper接口
+ */
+public interface ${ClassName}Mapper extends BaseMapper<${ClassName}> {
+
+    List<${ClassName}Vo> listVo(@Param("ew") QueryWrapper<${ClassName}> lqw);
+
+    ${ClassName}Vo getVo(@Param("id")Long id);
+}

@@ -1,0 +1,47 @@
+package ${packageName}.${moduleName}.domain;
+
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+import lombok.experimental.Accessors;
+import com.baomidou.mybatisplus.annotation.TableName;
+#if($table.crud)
+#elseif($table.tree)
+#end
+
+/**
+
+ * ==================================================================
+
+ * 这不是一个自由软件！未经本公司授权您只能在不用于商业目的的前提下
+ * 对本程序代码进行修改和使用；不允许对本程序代码以任何目的的再发布。
+ * ==================================================================
+ *
+ * @ClassName ${ClassName}
+ * @Author ${author}
+ * @Date ${datetime}
+ * @Version 1.0.0
+ * @Description ${functionName} PO对象
+ */
+#if($table.crud)
+#set($Entity="BasePlusEntity")
+#elseif($table.tree)
+#set($Entity="TreePlusEntity")
+#end
+@Data
+@ToString
+@EqualsAndHashCode
+@NoArgsConstructor
+@Accessors(chain = true)
+@TableName("${tableName}")
+public class ${ClassName} extends ${Entity} {
+    private static final long serialVersionUID = 1L;
+
+#foreach ($column in $columns)
+#if(!$table.isSuperColumn($column.javaField))
+    /** $column.columnComment */
+    private $column.javaType $column.javaField;
+#end
+#end
+}

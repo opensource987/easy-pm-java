@@ -1,0 +1,227 @@
+package ${packageName}.controller.${moduleName};
+
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Arrays;
+import cn.hutool.core.convert.Convert;
+import cn.hutool.core.lang.TypeReference;
+import com.mdframework.common.utils.StringUtils;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import com.mdframework.common.core.controller.BaseController;
+import com.mdframework.common.core.domain.AjaxResult;
+import ${packageName}.${moduleName}.domain.${ClassName};
+import ${packageName}.${moduleName}.domain.vo.${ClassName}Vo;
+import ${packageName}.${moduleName}.domain.req.${ClassName}Req;
+import ${packageName}.${moduleName}.domain.req.${ClassName}Add;
+import ${packageName}.${moduleName}.domain.req.${ClassName}Update;
+import ${packageName}.${moduleName}.service.I${ClassName}Service;
+import com.mdframework.utils.poi.ExcelUtil;
+import javax.validation.Valid;
+import io.swagger.annotations.*;
+#if($table.crud)
+import com.mdframework.common.core.page.TableDataInfo;
+#elseif($table.tree)
+#end
+/**
+
+ * ==================================================================
+
+ * 这不是一个自由软件！未经本公司授权您只能在不用于商业目的的前提下
+ * 对本程序代码进行修改和使用；不允许对本程序代码以任何目的的再发布。
+ * ==================================================================
+ *
+ * @ClassName ${ClassName}Controller
+ * @Author ${author}
+ * @Date ${datetime}
+ * @Version 1.0.0
+ * @Description ${functionName}Controller 接口类
+ */
+@Validated
+@Api(tags = "${functionName}")
+@RequiredArgsConstructor(onConstructor_ = @Autowired)
+@RestController
+@RequestMapping("/${moduleName}/${businessName}" )
+public class ${ClassName}Controller extends BaseController {
+
+    private final I${ClassName}Service i${ClassName}Service;
+
+ /**
+  * @Description 分页
+  * @Author ${author}
+  * @Date ${datetime}
+  * @Param ${className}
+  * @Return TableDataInfo
+ */
+    @ApiOperation("列表")
+    @GetMapping("/list")
+#if($table.crud)
+    public TableDataInfo<${ClassName}Vo> list(${ClassName}Req ${className}Req)
+    {
+        startPage();
+        QueryWrapper<${ClassName}> lqw = new QueryWrapper<${ClassName}>();
+        ${className}Req.generatorQuery(lqw,true);
+        List<${ClassName}Vo> list = i${ClassName}Service.listVo(lqw);
+        return getDataTable(list);
+    }
+#elseif($table.tree)
+    public AjaxResult<${ClassName}Vo> list(${ClassName}Req ${className}Req) {
+        QueryWrapper<${ClassName}> lqw = new QueryWrapper<${ClassName}>();
+        ${className}Req.generatorQuery(lqw,true);
+        List<${ClassName}Vo> list = i${ClassName}Service.listVo(lqw);
+        return AjaxResult.success(list);
+    }
+
+    /**
+     * 获取下拉树列表
+     */
+    @ApiOperation("下拉树列表")
+    @GetMapping("/treeselect")
+    public AjaxResult treeselect()
+    {
+        List<${ClassName}> ${className}s = i${ClassName}Service.list(new QueryWrapper<${ClassName}>());
+        return AjaxResult.success(this.buildTree(${className}s));
+    }
+
+    /**
+     * 构建前端所需要树结构
+     *
+     * @param ${className}s ${functionName}列表
+     * @return 树结构列表
+     */
+    private List<${ClassName}> buildTree(List<${ClassName}> ${className}s)
+    {
+        List<${ClassName}> returnList = new ArrayList<${ClassName}>();
+        List<Long> tempList = new ArrayList<Long>();
+        for (${ClassName} ${className} : ${className}s)
+        {
+            tempList.add(${className}.getId());
+        }
+        for (Iterator<${ClassName}> iterator = ${className}s.iterator(); iterator.hasNext();)
+        {
+            ${ClassName} ${className} = (${ClassName}) iterator.next();
+            // 如果是顶级节点, 遍历该父节点的所有子节点
+            if (!tempList.contains(${className}.getParentId()))
+            {
+                recursionFn(${className}s, ${className});
+                returnList.add(${className});
+            }
+        }
+        if (returnList.isEmpty())
+        {
+            returnList = ${className}s;
+        }
+        return returnList;
+    }
+
+    /**
+     * 递归列表
+     */
+    private void recursionFn(List<${ClassName}> list, ${ClassName} t)
+    {
+        // 得到子节点列表
+        List<${ClassName}> childList = getChildList(list, t);
+        t.setChildren(childList);
+        for (${ClassName} tChild : childList)
+        {
+            if (hasChild(list, tChild))
+            {
+                recursionFn(list, tChild);
+            }
+        }
+    }
+
+    /**
+     * 得到子节点列表
+     */
+    private List<${ClassName}> getChildList(List<${ClassName}> list, ${ClassName} t)
+    {
+        List<${ClassName}> tlist = new ArrayList<${ClassName}>();
+        Iterator<${ClassName}> it = list.iterator();
+        while (it.hasNext())
+        {
+            ${ClassName} n = (${ClassName}) it.next();
+            if (StringUtils.isNotNull(n.getParentId()) && n.getParentId().longValue() == t.getId().longValue())
+            {
+                tlist.add(n);
+            }
+        }
+        return tlist;
+    }
+
+    /**
+     * 判断是否有子节点
+     */
+    private boolean hasChild(List<${ClassName}> list, ${ClassName} t)
+    {
+        return getChildList(list, t).size() > 0 ? true : false;
+    }
+
+#end
+
+    /**
+     * @Description 详情
+     * @Author ${author}
+     * @Date ${datetime}
+     * @Param ${className}
+     * @Return AjaxResult
+     */
+    @ApiOperation("详情")
+    @GetMapping(value = "/{${pkColumn.javaField}}" )
+    public AjaxResult<${ClassName}Vo> getInfo(@PathVariable("${pkColumn.javaField}" ) ${pkColumn.javaType} ${pkColumn.javaField}) {
+        return AjaxResult.success(i${ClassName}Service.getVoById(${pkColumn.javaField}));
+    }
+
+    /**
+     * @Description 新增
+     * @Author ${author}
+     * @Date ${datetime}
+     * @Param ${className}
+     * @Return AjaxResult
+     */
+    @ApiOperation("新增")
+    @PostMapping
+    public AjaxResult add(@Valid @RequestBody ${ClassName}Add ${className}Add) {
+        ${ClassName} ${className} = Convert.convert(new TypeReference<${ClassName}>() {}, ${className}Add);
+        return toAjax(i${ClassName}Service.save(${className}) ? 1 : 0);
+    }
+
+    /**
+     * @Description 修改
+     * @Author ${author}
+     * @Date ${datetime}
+     * @Param ${className}
+     * @Return AjaxResult
+     */
+    @ApiOperation("修改")
+    @PutMapping
+    public AjaxResult edit(@Valid @RequestBody ${ClassName}Update ${className}Update) {
+        ${ClassName} ${className} = Convert.convert(new TypeReference<${ClassName}>() {}, ${className}Update);
+        return toAjax(i${ClassName}Service.updateById(${className}) ? 1 : 0);
+    }
+
+    /**
+     * @Description 删除
+     * @Author ${author}
+     * @Date ${datetime}
+     * @Param ${className}
+     * @Return AjaxResult
+     */
+    @ApiOperation("删除")
+    @DeleteMapping("/{${pkColumn.javaField}s}" )
+    public AjaxResult remove(@PathVariable ${pkColumn.javaType}[] ${pkColumn.javaField}s) {
+        return toAjax(i${ClassName}Service.removeByIds(Arrays.asList(${pkColumn.javaField}s)) ? 1 : 0);
+    }
+}

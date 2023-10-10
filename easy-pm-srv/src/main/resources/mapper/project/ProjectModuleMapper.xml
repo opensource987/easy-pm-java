@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+        <!DOCTYPE mapper
+                PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+                "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mdframework.module.project.mapper.ProjectModuleMapper">
+
+    <resultMap type="ProjectModuleVo" id="ProjectModuleResult">
+                <result property="id"    column="id"    />
+                <result property="moduleName"    column="module_name"    />
+                <result property="parentModuleName"    column="parent_module_name"    />
+                <result property="parentId"    column="parent_id"    />
+                <result property="progress"    column="progress"    />
+                <result property="projectId"    column="project_id"    />
+                <result property="projectName"    column="project_name"    />
+                <result property="amount"    column="amount"    />
+                <result property="moduleBeginTime"    column="module_begin_time"    />
+                <result property="modulePredictEndTime"    column="module_predict_end_time"    />
+                <result property="status"    column="status"    />
+                <result property="orderNum"    column="order_num"    />
+                <result property="remark"    column="remark"    />
+                <result property="createTime"    column="create_time"    />
+                <result property="updateTime"    column="update_time"    />
+                <result property="delStatus"    column="del_status"    />
+                <collection  property="users"   javaType="java.util.List"        resultMap="UserResult" />
+    </resultMap>
+
+    <resultMap id="UserResult" type="SysUser">
+        <id     property="userId"       column="user_id"        />
+        <result property="nickName"     column="nick_name"      />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        o.id ,
+                o.module_name ,
+                o.parent_id ,
+                o.progress ,
+                o.project_id ,
+                o.module_begin_time ,
+                o.module_predict_end_time ,
+                o.status ,
+                o.order_num ,
+                o.remark ,
+                o.create_time ,
+                o.update_time ,
+                o.del_status
+        from (epm_project_module o
+
+    </sql>
+
+    <select id="getVo" resultType="com.mdframework.module.project.domain.vo.ProjectModuleVo" resultMap="ProjectModuleResult">
+        select
+        u.user_id,
+        u.nick_name,
+        <include refid="Base_Column_List" />
+        )
+        left join epm_project_module_user pu on o.id = pu.project_module_id
+        left join sys_user u on u.user_id = pu.user_id and u.del_flag='0'
+        where o.id=#{id} and o.del_status=0
+    </select>
+
+    <select id="listVo" resultType="com.mdframework.module.project.domain.vo.ProjectModuleVo" resultMap="ProjectModuleResult">
+        select
+        u.user_id,
+        u.nick_name,
+        <include refid="Base_Column_List" />
+        )
+        left join epm_project_module_user pu on o.id = pu.project_module_id
+        left join sys_user u on u.user_id = pu.user_id and u.del_flag='0'
+        ${ew.customSqlSegment}
+        order by o.module_begin_time asc, o.parent_id asc, o.id asc, o.order_num asc
+    </select>
+
+    <select id="listVoByUser" resultType="com.mdframework.module.project.domain.vo.ProjectModuleVo" resultMap="ProjectModuleResult">
+        select
+        p.project_name,
+        p.amount,
+        pm.module_name as parent_module_name,
+        <include refid="Base_Column_List" />
+        , epm_project_module_user pu, epm_project p)
+        left join epm_project_module pm on o.parent_id=pm.id and o.del_status='0'
+        ${ew.customSqlSegment} and o.id = pu.project_module_id and o.project_id = p.id
+        order by o.progress desc, o.module_begin_time asc, o.parent_id asc, o.order_num asc
+    </select>
+
+    <insert id="batchAddModuleUsers">
+        insert into epm_project_module_user(project_module_id, user_id) values
+        <foreach item="item" index="index" collection="list" separator=",">
+            (#{moduleId},#{item.userId})
+        </foreach>
+    </insert>
+
+    <delete id="deleteModuleUsers">
+        delete from epm_project_module_user where project_module_id=#{moduleId}
+    </delete>
+
+
+</mapper>

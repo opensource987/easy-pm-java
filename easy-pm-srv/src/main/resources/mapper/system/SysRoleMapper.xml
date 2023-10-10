@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mdframework.module.system.mapper.SysRoleMapper">
+
+	<resultMap type="SysRole" id="SysRoleResult">
+		<id     property="roleId"             column="role_id"               />
+		<result property="roleName"           column="role_name"             />
+		<result property="roleKey"            column="role_key"              />
+		<result property="roleSort"           column="role_sort"             />
+		<result property="dataScope"          column="data_scope"            />
+		<result property="menuCheckStrictly"  column="menu_check_strictly"   />
+		<result property="deptCheckStrictly"  column="dept_check_strictly"   />
+		<result property="status"             column="status"                />
+		<result property="delFlag"            column="del_flag"              />
+		<result property="createBy"           column="create_by"             />
+		<result property="createTime"         column="create_time"           />
+		<result property="updateBy"           column="update_by"             />
+		<result property="updateTime"         column="update_time"           />
+		<result property="remark"             column="remark"                />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+			o.role_id,
+			o.role_name,
+			o.role_key,
+			o.role_sort,
+			o.data_scope,
+			o.menu_check_strictly,
+			o.dept_check_strictly,
+			o.STATUS,
+			o.del_flag,
+			o.create_time,
+			o.remark 
+		FROM
+			sys_role o
+-- 			LEFT JOIN sys_user_role ur ON ur.role_id = o.role_id
+-- 			LEFT JOIN sys_user u ON u.user_id = ur.user_id
+-- 			LEFT JOIN sys_dept d ON u.dept_id = d.dept_id
+	</sql>
+	<sql id="selectRoleVo">
+	    select distinct o.role_id, o.role_name, o.role_key, o.role_sort, o.data_scope, o.menu_check_strictly, o.dept_check_strictly,
+            o.status, o.del_flag, o.create_time, o.remark 
+        from sys_role o
+	        left join sys_user_role ur on ur.role_id = o.role_id
+	        left join sys_user u on u.user_id = ur.user_id
+	        left join sys_dept d on u.dept_id = d.dept_id
+    </sql>
+
+	<select id="listVo" resultType="com.mdframework.module.system.domain.vo.SysRoleVo">
+		select
+		<include refid="Base_Column_List"/>
+		${ew.customSqlSegment}
+	</select>
+
+    <select id="selectRoleList" parameterType="SysRole" resultMap="SysRoleResult">
+		<include refid="selectRoleVo"/>
+		where o.del_flag = '0'
+		<if test="roleName != null and roleName != ''">
+			AND o.role_name like concat('%', #{roleName}, '%')
+		</if>
+		<if test="status != null and status != ''">
+			AND o.status = #{status}
+		</if>
+		<if test="roleKey != null and roleKey != ''">
+			AND o.role_key like concat('%', #{roleKey}, '%')
+		</if>
+		<if test="beginTime != null and beginTime != ''"><!-- 开始时间检索 -->
+			and date_format(o.create_time,'%y%m%d') &gt;= date_format(#{beginTime},'%y%m%d')
+		</if>
+		<if test="endTime != null and endTime != ''"><!-- 结束时间检索 -->
+			and date_format(o.create_time,'%y%m%d') &lt;= date_format(#{endTime},'%y%m%d')
+		</if>
+			<!-- 数据范围过滤 -->
+			${params.dataScope}
+	</select>
+
+	<select id="selectRolePermissionByUserId" parameterType="Long" resultMap="SysRoleResult">
+		<include refid="selectRoleVo"/>
+		WHERE o.del_flag = '0' and ur.user_id = #{userId}
+	</select>
+	
+	<select id="selectRoleAll" resultMap="SysRoleResult">
+		<include refid="selectRoleVo"/>
+	</select>
+	
+	<select id="selectRoleListByUserId" parameterType="Long" resultType="Integer">
+		select o.role_id
+        from sys_role o
+	        left join sys_user_role ur on ur.role_id = o.role_id
+	        left join sys_user u on u.user_id = ur.user_id
+	    where u.user_id = #{userId}
+	</select>
+	
+	<select id="selectRoleById" parameterType="Long" resultMap="SysRoleResult">
+		<include refid="selectRoleVo"/>
+		where o.role_id = #{roleId}
+	</select>
+	
+	<select id="selectRolesByUserName" parameterType="String" resultMap="SysRoleResult">
+		<include refid="selectRoleVo"/>
+		WHERE o.del_flag = '0' and u.user_name = #{userName}
+	</select>
+	
+	<select id="checkRoleNameUnique" parameterType="String" resultMap="SysRoleResult">
+		<include refid="selectRoleVo"/>
+		 where o.role_name=#{roleName} limit 1
+	</select>
+	
+	<select id="checkRoleKeyUnique" parameterType="String" resultMap="SysRoleResult">
+		<include refid="selectRoleVo"/>
+		 where o.role_key=#{roleKey} limit 1
+	</select>
+
+	<update id="updateRoleStatus" parameterType="SysRole">
+ 		update sys_user set status = #{status} where user_id = #{userId}
+	</update>
+	
+	<delete id="deleteRoleById" parameterType="Long">
+ 		delete from sys_role where role_id = #{roleId}
+ 	</delete>
+ 	
+ 	<delete id="deleteRoleByIds" parameterType="Long">
+ 	    update sys_role set del_flag = '2' where role_id in
+ 		<foreach collection="array" item="roleId" open="(" separator="," close=")">
+ 			#{roleId}
+        </foreach> 
+ 	</delete>
+ 	
+</mapper> 

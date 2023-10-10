@@ -1,0 +1,52 @@
+package ${packageName}.${moduleName}.service.impl;
+
+import org.springframework.stereotype.Service;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import ${packageName}.${moduleName}.mapper.${ClassName}Mapper;
+import ${packageName}.${moduleName}.domain.${ClassName};
+import ${packageName}.${moduleName}.domain.vo.${ClassName}Vo;
+import ${packageName}.${moduleName}.service.I${ClassName}Service;
+import org.apache.ibatis.annotations.Param;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import java.util.List;
+/**
+
+ * ==================================================================
+
+ * 这不是一个自由软件！未经本公司授权您只能在不用于商业目的的前提下
+ * 对本程序代码进行修改和使用；不允许对本程序代码以任何目的的再发布。
+ * ==================================================================
+ *
+ * @ClassName ${ClassName}
+ * @Author ${author}
+ * @Date ${datetime}
+ * @Version 1.0.0
+ * @Description ${functionName}Service业务层处理
+ */
+@Service
+public class ${ClassName}ServiceImpl extends ServiceImpl<${ClassName}Mapper, ${ClassName}> implements I${ClassName}Service {
+
+    /**
+     * @Description 查询列表返回VO 用于返回给前端的列表接口
+     * @Author ${author}
+     * @Date ${datetime}
+     * @Param [lqw]
+     * @Return List<${ClassName}Vo>
+     */
+    @Override
+    public List<${ClassName}Vo> listVo(QueryWrapper<${ClassName}> lqw) {
+        return this.baseMapper.listVo(lqw);
+    }
+
+    /**
+     * @Description 通过查询详情VO 用于返回给前端的列详情接口
+     * @Author ${author}
+     * @Date ${datetime}
+     * @Param [id]
+     * @Return ${ClassName}Vo
+     */
+    @Override
+    public ${ClassName}Vo getVoById(Long id) {
+        return this.baseMapper.getVo(id);
+    }
+}

@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+        <!DOCTYPE mapper
+                PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+                "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mdframework.module.project.mapper.ProjectMapper">
+
+    <resultMap type="ProjectVo" id="ProjectResult">
+        <result property="id"    column="id"    />
+        <result property="projectName"    column="project_name"    />
+        <result property="projectType"    column="project_type"    />
+        <result property="projectBeginTime"    column="project_begin_time"    />
+        <result property="projectPredictEndTime"    column="project_predict_end_time"    />
+        <result property="progress"    column="progress"    />
+        <result property="amount"    column="amount"    />
+        <result property="status"    column="status"    />
+        <result property="orderNum"    column="order_num"    />
+        <result property="remark"    column="remark"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="closeTime"    column="close_time"    />
+        <result property="delStatus"    column="del_status"    />
+        <collection  property="users"   javaType="java.util.List"        resultMap="UserResult" />
+    </resultMap>
+
+    <resultMap id="UserResult" type="SysUser">
+        <id     property="userId"       column="user_id"        />
+        <result property="nickName"     column="nick_name"      />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        o.id ,
+                o.project_name ,
+                o.project_type ,
+                o.project_begin_time ,
+                o.project_predict_end_time ,
+                o.progress ,
+                o.status ,
+                o.amount ,
+                o.order_num ,
+                o.remark ,
+                o.create_time ,
+                o.update_time ,
+                o.close_time ,
+                o.del_status
+        from epm_project o
+
+    </sql>
+
+    <select id="getVo" resultType="com.mdframework.module.project.domain.vo.ProjectVo" resultMap="ProjectResult">
+        select
+        u.user_id,
+        u.nick_name,
+        <include refid="Base_Column_List" />
+        left join epm_project_user pu on o.id = pu.project_id
+        left join sys_user u on u.user_id = pu.user_id and u.del_flag='0'
+        where o.id=#{id} and o.del_status=0
+    </select>
+
+    <select id="listVo" resultType="com.mdframework.module.project.domain.vo.ProjectVo" resultMap="ProjectResult">
+        select
+        <include refid="Base_Column_List" />
+        left join epm_project_user pu on o.id = pu.project_id
+        ${ew.customSqlSegment}
+    </select>
+
+    <select id="listUsersByProject" resultType="com.mdframework.module.system.domain.entity.SysUser" resultMap="UserResult">
+        select
+        u.user_id,
+        u.nick_name
+        from epm_project_user pu
+        left join sys_user u on u.user_id = pu.user_id
+        where pu.project_id=#{projectId}
+        group by u.user_id, u.nick_name, pu.id
+        order by pu.id asc
+    </select>
+
+    <select id="listVoByUser" resultType="com.mdframework.module.project.domain.vo.ProjectVo" resultMap="ProjectResult">
+        select
+        <include refid="Base_Column_List" />
+        , epm_project_user pu
+        ${ew.customSqlSegment} and o.id = pu.project_id and pu.user_id=#{userId}
+        order by o.order_num asc
+    </select>
+
+    <insert id="batchAddProjectUsers">
+        insert into epm_project_user(project_id, user_id) values
+        <foreach item="item" index="index" collection="list" separator=",">
+            (#{projectId},#{item.userId})
+        </foreach>
+    </insert>
+
+    <delete id="deleteProjectUsers">
+        delete from epm_project_user where project_id=#{projectId}
+    </delete>
+
+    <select id="checkProjectNameUnique" parameterType="String" resultType="int">
+        select count(1) from epm_project where project_name = #{projectName} and del_status='0' limit 1
+    </select>
+
+    <select id="projectStatistics" resultType="com.mdframework.module.project.domain.req.ProjectStatistics">
+        select
+            count(case when status=0 and progress!=12 then 1 else null end) developingNum,
+            count(case when status=1 then 1 else null end) stopedNum,
+            count(case when status=2 then 1 else null end) closedNum,
+            count(case when status=3 then 1 else null end) canceledNum,
+            count(case when status=4 then 1 else null end) maintainNum,
+            count(case when status=0 and progress=0 then 1 else null end) newStartNum,
+            count(case when status=0 and progress=10 then 1 else null end) testingNum,
+            count(case when status=0 and progress=12 then 1 else null end) developedNum,
+            count(id) totalNum
+
+        from epm_project where del_status='0' limit 1
+    </select>
+</mapper>
